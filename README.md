@@ -6,6 +6,17 @@ apt update && apt upgrade -y
 apt install nodejs ufw npm git nginx certbot python3-certbot-nginx -y
 ```
 
+## Connect Github Account to Server
+
+```
+ssh-keygen
+cat /root/.ssh/*.pub
+```
+
+Copy the `ssh-ed25519 AA...1 root@...` and paste it into your Github Settings in SSH section.
+
+## Alias Setup
+
 Add these to `~/.bashrc`
 
 ```sh
