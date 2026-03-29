@@ -20,10 +20,26 @@ Copy the `ssh-ed25519 AA...1 root@...` and paste it into your Github Settings in
 Add these to `~/.bashrc`
 
 ```sh
+pop() {
+  git -C "__FRONTEND_PATH__" pull || return 1
+  cp ".env" "__FRONTEND_PATH__/.env"
+}
+nr() {
+  systemctl daemon-reload
+  systemctl restart SERVER
+}
+u() {
+  read -p "Are you sure? (Y/N): " c
+  [[ "$c" =~ ^[Yy]$ ]] || return 1
+  echo "Updating server..."
+  pop || return 1
+  nr
+}
+
+alias rn='nr'
 alias log='cat /var/log/SERVER.log'
-alias pop='git -C "__FRONTEND_PATH__" pull'
-alias nr='systemctl restart node'
-alias rn='systemctl restart node'
+alias rmlog='echo "" > /var/log/SERVER.log'
+alias logrm='rmlog'
 ```
 
 # Ngnix
@@ -58,9 +74,9 @@ Description=SERVER
 After=network.target
 
 [Service]
-ExecStartPre=rm -rf /var/log/node.log
+ExecStartPre=/bin/sh -c 'echo "" > /var/log/SERVER.log'
 ExecStart=/bin/sh -c 'exec /usr/bin/node __BACKEND_PATH__/INDEX.js >> /var/log/SERVER.log 2>&1'
-WorkingDirectory=/root/ETICARET/NODE
+WorkingDirectory=__BACKEND_PATH__/
 Restart=always
 RestartSec=1
 User=root
@@ -73,5 +89,6 @@ WantedBy=multi-user.target
 ```sh
 systemctl daemon-reload
 systemctl start SERVER
+systemctl enable SERVER
 systemctl status SERVER
 ```
