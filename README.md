@@ -3,7 +3,7 @@
 
 ```sh
 apt update && apt upgrade -y
-apt install nodejs ufw npm git nginx certbot python3-certbot-nginx -y
+apt install nodejs ufw npm git nginx certbot python3-certbot-nginx rsync -y
 ```
 
 ## Connect Github Account to Server
