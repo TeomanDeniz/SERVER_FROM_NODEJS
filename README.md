@@ -94,6 +94,7 @@ source ~/.bashrc
 ```sh
 ufw allow 443
 ufw allow 80
+ufw allow 22
 ufw enable
 ```
 
