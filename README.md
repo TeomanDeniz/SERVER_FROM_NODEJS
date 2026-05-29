@@ -21,12 +21,12 @@ Add these to `~/.bashrc`
 
 ```sh
 pop() {
-  git -C "__FRONTEND_PATH__" pull || return 1
-  cp ".env" "__FRONTEND_PATH__/.env"
+  git -C ~/__BACKEND_PATH__ pull || return 1
+  cp ~/.env ~/__BACKEND_PATH__/.env
 }
 nr() {
-  systemctl daemon-reload
-  systemctl restart SERVER
+        systemctl daemon-reload
+        systemctl restart SERVER
 }
 u() {
   read -p "Are you sure? (Y/N): " c
@@ -36,6 +36,7 @@ u() {
   nr
 }
 
+alias status='systemctl status SERVER'
 alias rn='nr'
 alias log='cat /var/log/SERVER.log'
 alias rmlog='echo "" > /var/log/SERVER.log'
@@ -74,13 +75,11 @@ Description=SERVER
 After=network.target
 
 [Service]
-ExecStartPre=/bin/sh -c 'echo "" > /var/log/SERVER.log'
-ExecStart=/bin/sh -c 'exec /usr/bin/node __BACKEND_PATH__/INDEX.js >> /var/log/SERVER.log 2>&1'
-WorkingDirectory=__BACKEND_PATH__/
+ExecStart=/bin/sh -c 'exec /usr/bin/node /root/__BACKEND_PATH__/MAIN.js >> /var/log/SERVER.log 2>&1'
+WorkingDirectory=/root/__BACKEND_PATH__/
 Restart=always
-RestartSec=1
+RestartSec=3
 User=root
-Environment=NODE_ENV=production
 
 [Install]
 WantedBy=multi-user.target
@@ -91,4 +90,39 @@ systemctl daemon-reload
 systemctl start SERVER
 systemctl enable SERVER
 systemctl status SERVER
+```
+
+# Auto Reset system daily
+
+```sh
+timedatectl set-timezone Europe/Istanbul
+```
+
+```sh
+vim /etc/systemd/system/DAILY_RESET_SERVER.service
+```
+
+```ini
+[Unit]
+Description=Restart Node app
+
+[Service]
+Type=oneshot
+ExecStart=/bin/systemctl restart SERVER.service
+```
+
+```sh
+vim /etc/systemd/system/DAILY_RESET_SERVER.timer
+```
+
+```ini
+[Unit]
+Description=Restart the SERVER app every day at 06:00 Turkey time
+
+[Timer]
+OnCalendar=*-*-* 06:00:00 Europe/Istanbul
+Persistent=true
+
+[Install]
+WantedBy=timers.target
 ```
