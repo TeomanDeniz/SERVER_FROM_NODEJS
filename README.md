@@ -55,7 +55,9 @@ systemctl restart ssh
 
 ## Alias Setup
 
-Add these to `~/.bashrc`
+```sh
+vim ~/.bashrc
+```
 
 ```sh
 pop() {
@@ -81,6 +83,10 @@ alias rmlog='echo "" > /var/log/SERVER.log'
 alias logrm='rmlog'
 
 export PS1='[ SERVER ] - (\w): '
+```
+
+```sh
+source ~/.bashrc
 ```
 
 # Ngnix
