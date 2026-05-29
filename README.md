@@ -94,6 +94,7 @@ source ~/.bashrc
 ```sh
 ufw allow 443
 ufw allow 80
+ufw enable
 ```
 
 Move your `NGNIX/http.conf` and `NGNIX/https.conf` files inside `/etc/nginx/conf.d`
