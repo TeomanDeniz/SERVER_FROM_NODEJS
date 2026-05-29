@@ -15,6 +15,44 @@ cat /root/.ssh/*.pub
 
 Copy the `ssh-ed25519 AA...1 root@...` and paste it into your Github Settings in SSH section.
 
+## Security
+
+On your home computer:
+
+```sh
+ssh-keygen -t ed25519
+type %USERPROFILE%\.ssh\id_rsa.pub
+
+(COPY THE SSH-RSA)
+```
+
+In server:
+
+```sh
+mkdir -p /root/.ssh
+vim /root/.ssh/authorized_keys (PASTE THE SSH-RSA HERE)
+chmod 700 /root/.ssh
+chmod 600 /root/.ssh/authorized_keys
+vim /etc/ssh/sshd_config
+```
+
+```conf
+PermitRootLogin yes # EDIT IF "no"
+PasswordAuthentication no # EDIT
+
+# ADD THESE AT THE BOTTOM:
+
+ChallengeResponseAuthentication no
+PubkeyAuthentication yes
+MaxAuthTries 3
+MaxSessions 2
+LoginGraceTime 20
+```
+
+```sh
+systemctl restart ssh
+```
+
 ## Alias Setup
 
 Add these to `~/.bashrc`
@@ -41,6 +79,8 @@ alias rn='nr'
 alias log='cat /var/log/SERVER.log'
 alias rmlog='echo "" > /var/log/SERVER.log'
 alias logrm='rmlog'
+
+export PS1='[ SERVER ] - (\w): '
 ```
 
 # Ngnix
@@ -126,3 +166,16 @@ Persistent=true
 [Install]
 WantedBy=timers.target
 ```
+
+# Extra:
+
+```sh
+vim /etc/motd
+```
+
+```
+
+Custom message when login success.
+
+```
+
