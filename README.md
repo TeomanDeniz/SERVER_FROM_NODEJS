@@ -128,12 +128,6 @@ systemctl start nginx
 systemctl enable nginx
 ```
 
-# SSL Certificate
-
-```sh
-certbot --nginx -d YOUR_DOMAIN -d YOUR_DOMAIN_2
-```
-
 # Setting up NODE service
 
 ```sh
