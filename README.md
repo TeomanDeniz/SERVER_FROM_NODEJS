@@ -112,20 +112,13 @@ export PS1='[ SERVER ] - (\w): '
 source ~/.bashrc
 ```
 
-# Ngnix
+# UFW
 
 ```sh
 ufw allow 443
 ufw allow 80
 ufw allow 22
 ufw enable
-```
-
-Move your `NGNIX/http.conf` and `NGNIX/https.conf` files inside `/etc/nginx/conf.d`
-
-```sh
-systemctl start nginx
-systemctl enable nginx
 ```
 
 # Setting up NODE service
