@@ -1,12 +1,57 @@
 
 # Setting up the machine
 
+## Cloudflared install
+
 ```sh
 apt update && apt upgrade -y
-apt install nodejs ufw npm git nginx certbot python3-certbot-nginx rsync -y
+reboot
+```
+
+After restart:
+
+```sh
+apt install curl -y
+```
+
+[Cloudflare](https://pkg.cloudflare.com/index.html)
+
+```sh
+apt update
+apt install nodejs ufw npm git vim rsync cloudflared -y
+cloudflared tunnel login
+cloudflared tunnel create HTTP_DOMAIN_NAME
+cloudflared tunnel route dns HTTP_DOMAIN_NAME DOMAIN.NAME
+vim ~/.cloudflared/config.yml
+```
+
+```
+tunnel: HTTP_DOMAIN_NAME
+credentials-file: /PATH/TO/.cloudflared/????????-????-????-????-????????????.json
+
+ingress:
+   - hostname: DOMAIN.NAME
+     service: http://127.0.0.1:3000
+   - service: http_status:404
+```
+
+```sh
+cloudflared service install
 ```
 
 ## Connect Github Account to Server
+
+```cmd
+type %USERPROFILE%\.ssh\id_ed25519.pub
+```
+or
+```sh
+cat ~/.ssh/id_ed25519.pub
+```
+
+Copy the result and paste there at `~/.ssh/authorized_keys`
+
+## Connect your Github Accont
 
 ```
 ssh-keygen
@@ -17,36 +62,14 @@ Copy the `ssh-ed25519 AA...1 root@...` and paste it into your Github Settings in
 
 ## Security
 
-On your home computer:
-
 ```sh
-ssh-keygen -t ed25519
-type %USERPROFILE%\.ssh\id_rsa.pub
-
-(COPY THE SSH-RSA)
-```
-
-In server:
-
-```sh
-mkdir -p /root/.ssh
-vim /root/.ssh/authorized_keys (PASTE THE SSH-RSA HERE)
-chmod 700 /root/.ssh
-chmod 600 /root/.ssh/authorized_keys
 vim /etc/ssh/sshd_config
 ```
 
 ```conf
 PermitRootLogin yes # EDIT IF "no"
 PasswordAuthentication no # EDIT
-
-# ADD THESE AT THE BOTTOM:
-
-ChallengeResponseAuthentication no
 PubkeyAuthentication yes
-MaxAuthTries 3
-MaxSessions 2
-LoginGraceTime 20
 ```
 
 ```sh
