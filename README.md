@@ -1,45 +1,12 @@
 
 # Setting up the machine
 
-## Cloudflared install
-
 ```sh
 apt update && apt upgrade -y
-reboot
+apt install nodejs ufw npm git nginx vim certbot python3-certbot-nginx rsync -y
 ```
 
-After restart:
-
-```sh
-apt install curl -y
-```
-
-[Cloudflare](https://pkg.cloudflare.com/index.html)
-
-```sh
-apt update
-apt install nodejs ufw npm git vim rsync cloudflared -y
-cloudflared tunnel login
-cloudflared tunnel create HTTP_DOMAIN_NAME
-cloudflared tunnel route dns HTTP_DOMAIN_NAME DOMAIN.NAME
-vim ~/.cloudflared/config.yml
-```
-
-```
-tunnel: HTTP_DOMAIN_NAME
-credentials-file: /PATH/TO/.cloudflared/????????-????-????-????-????????????.json
-
-ingress:
-   - hostname: DOMAIN.NAME
-     service: http://127.0.0.1:3000
-   - service: http_status:404
-```
-
-```sh
-cloudflared service install
-```
-
-## Connect Github Account to Server
+## Connect your personal computer to server
 
 ```cmd
 type %USERPROFILE%\.ssh\id_ed25519.pub
@@ -119,6 +86,21 @@ ufw allow 443
 ufw allow 80
 ufw allow 22
 ufw enable
+```
+
+# Ngnix
+
+Move your `NGNIX/http.conf` and `NGNIX/https.conf` files inside `/etc/nginx/conf.d`
+
+```sh
+systemctl start nginx
+systemctl enable nginx
+```
+
+# SSL Certificate
+
+```sh
+certbot --nginx -d YOUR_DOMAIN -d YOUR_DOMAIN_2
 ```
 
 # Setting up NODE service
