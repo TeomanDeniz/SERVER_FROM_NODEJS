@@ -53,6 +53,7 @@ vim ~/.bashrc
 pop() {
   git -C ~/__BACKEND_PATH__ pull || return 1
   cp ~/.env ~/__BACKEND_PATH__/.env
+  nginx -s reload
 }
 nr() {
         systemctl daemon-reload
